@@ -145,6 +145,9 @@ class Publisher
     {
         $this->console('Publisher is running!');
 
+        $config = $this->di->get('config')->toArray();
+
+        $this->log(json_encode($config));
         /**
          * @var GenericProvider $client
          */
@@ -152,9 +155,7 @@ class Publisher
 
         $token = $client->getAccessToken('client_credentials');
 
-        $config = $this->di->get('config')->toArray();
 
-        $this->console(json_encode($config));
 
         $hour    = $config['notify']['hour'];
         $api_url = $config['oauth_client']['url'];
