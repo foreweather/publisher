@@ -166,7 +166,7 @@ class Publisher
                 );
                 $response = $client->getParsedResponse($request);
 
-                if ($response['length'] > 0) {
+                if (isset($response['length']) && $response['length'] > 0) {
                     $this->log('Send notification to timezone subscribers');
                     $this->queue->useTube('default')->put(
                         json_encode(
@@ -176,8 +176,11 @@ class Publisher
                             ]
                         )
                     );
+                } else {
+                    throw new \Exception('Subscriber selection timezone service not working...');
                 }
             } catch (Exception $e) {
+                $this->log($e->getMessage());
                 continue;
             }
 
