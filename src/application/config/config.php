@@ -11,4 +11,7 @@ return [
         'scope'                  => [getenv('OAUTH_CLIENT_SCOPE')],
         'url'                    => getenv('API_BASE_URL'),
     ],
+    'notify'       => [
+        'hour'     => getenv('NOTIFY_HOUR'),
+    ],
 ];

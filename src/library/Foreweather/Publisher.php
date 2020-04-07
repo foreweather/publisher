@@ -2,9 +2,15 @@
 
 namespace Foreweather;
 
+use Exception;
+use League\OAuth2\Client\Provider\GenericProvider;
+use Phalcon\Cli\TaskInterface;
 use Phalcon\Di\FactoryDefault\Cli as FactoryDefault;
 use Phalcon\Di\ServiceProviderInterface;
+use Phalcon\Logger;
+use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
+use Psr\Log\LoggerInterface;
 
 class Publisher
 {
@@ -14,9 +20,29 @@ class Publisher
     protected $di;
 
     /**
+     * @var bool
+     */
+    protected $shouldClose = false;
+
+    /**
      * @var Pheanstalk
      */
     protected $queue;
+
+    /**
+     * @var Job
+     */
+    protected $job;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
+     * @var TaskInterface
+     */
+    protected $task;
 
     /**
      * @var array
@@ -29,14 +55,12 @@ class Publisher
     public function setup(array $providers = []): void
     {
         $this->di        = new FactoryDefault();
-        $this->providers = $providers;
         $this->di->set('metrics', microtime(true));
+
+        $this->providers = $providers;
 
         $this->registerServices();
 
-        /**
-         * @todo make active after the connection
-         */
         $this->queue = $this->di->get('queue');
         $this->queue->useTube('publisher');
     }
@@ -46,7 +70,7 @@ class Publisher
      *
      * @return void
      */
-    private function registerServices(): void
+    private function registerServices()
     {
         foreach ($this->providers as $provider) {
             /**
@@ -57,15 +81,113 @@ class Publisher
         }
     }
 
+    /**
+     * @param     $message
+     * @param int $level
+     */
+    private function log($message, int $level = Logger::INFO)
+    {
+        $loggy      = [
+            Logger::CRITICAL => 'CRITICAL',
+            Logger::ALERT    => 'ALERT',
+            Logger::ERROR    => 'ERROR',
+            Logger::WARNING  => 'WARNING',
+            Logger::NOTICE   => 'NOTICE',
+            Logger::INFO     => 'INFO',
+            Logger::DEBUG    => 'DEBUG',
+            Logger::CUSTOM   => 'CUSTOM',
+        ];
+        $timeString = date('Y-m-d H:i:s');
+        $message    = "[{$loggy[$level]}] [{$timeString}] {$message}";
+        if (!empty($this->logger)) {
+            $this->logger->log(1, $message);
+        }
+
+        echo $message . PHP_EOL;
+    }
+
+    /**
+     * @param $job_request
+     *
+     * @return array
+     * @throws Exception
+     */
+    protected function segments($job_request): array
+    {
+        $segments = explode(':', $job_request);
+        if (count($segments) !== 2) {
+            throw new Exception('Invalid task handle');
+        }
+        return $segments;
+    }
+
+    /**
+     * @param array $segments
+     * @param array $data
+     *
+     * @return bool
+     * @throws Exception
+     */
+    protected function handle(array $segments, array $data): bool
+    {
+        return call_user_func_array([$this->di[$segments[0]], $segments[1]], [$data, $this->job]);
+    }
+
+    /**
+     * @param string $message
+     */
+    public function console(string $message)
+    {
+        echo $message . PHP_EOL;
+    }
+
     public function run(): void
     {
-        echo 'Publisher Service started.' . PHP_EOL;
-        $i = 1;
-        while (true) {
-            echo 'checking... ' . $i . PHP_EOL;
+        $this->console('Publisher is running!');
 
-            sleep(2);
-            $i++;
+        /**
+         * @var GenericProvider $client
+         */
+        $client = $this->di->get('oauth_client');
+
+        $token = $client->getAccessToken('client_credentials');
+
+        $hour = $this->di->get('config')->get('notify')['hour'];
+
+        $url = 'http://api/user/subscribed_timezone/?clock=' . $hour;
+
+        while (true) {
+            try {
+                $request  = $client->getAuthenticatedRequest(
+                    'GET',
+                    $url,
+                    $token
+                );
+                $response = $client->getParsedResponse($request);
+
+                if ($response['length'] > 0) {
+                    $this->log('Send notification to timezone subscribers');
+                    $this->queue->useTube('default')->put(
+                        json_encode(
+                            [
+                                'job'     => 'notify:subscriberAction',
+                                'payload' => $response['items'],
+                            ]
+                        )
+                    );
+                }
+            } catch (Exception $e) {
+                continue;
+            }
+
+            sleep(60);
+        }
+    }
+
+    public function shouldClose(): void
+    {
+        if ($this->shouldClose) {
+            die('closed!');
         }
     }
 }
