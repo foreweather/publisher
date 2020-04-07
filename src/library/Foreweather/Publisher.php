@@ -152,8 +152,12 @@ class Publisher
 
         $token = $client->getAccessToken('client_credentials');
 
-        $hour    = $this->di->get('config')->get('notify')['hour'];
-        $api_url = $this->di->get('config')->get('oauth_client')['url'];
+        $config = $this->di->get('config')->toArray();
+
+        $this->console(json_encode($config));
+
+        $hour    = $config['notify']['hour'];
+        $api_url = $config['oauth_client']['url'];
 
         $url = $api_url . '/user/subscribed_timezone ?clock=' . $hour;
 
@@ -177,7 +181,7 @@ class Publisher
                         )
                     );
                 } else {
-                    throw new Exception('Subscriber selection timezone service not working: '. $url);
+                    throw new Exception('Subscriber selection timezone service not working: ' . $url);
                 }
             } catch (Exception $e) {
                 $this->log($e->getMessage());
