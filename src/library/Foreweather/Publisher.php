@@ -177,7 +177,7 @@ class Publisher
                         )
                     );
                 } else {
-                    throw new Exception('Subscriber selection timezone service not working...');
+                    throw new Exception('Subscriber selection timezone service not working: '. $url);
                 }
             } catch (Exception $e) {
                 $this->log($e->getMessage());
