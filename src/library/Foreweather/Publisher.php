@@ -54,7 +54,7 @@ class Publisher
      */
     public function setup(array $providers = []): void
     {
-        $this->di        = new FactoryDefault();
+        $this->di = new FactoryDefault();
         $this->di->set('metrics', microtime(true));
 
         $this->providers = $providers;
@@ -152,9 +152,10 @@ class Publisher
 
         $token = $client->getAccessToken('client_credentials');
 
-        $hour = $this->di->get('config')->get('notify')['hour'];
+        $hour    = $this->di->get('config')->get('notify')['hour'];
+        $api_url = $this->di->get('config')->get('oauth_client')['url'];
 
-        $url = 'http://api/user/subscribed_timezone/?clock=' . $hour;
+        $url = $api_url . '/user/subscribed_timezone ?clock=' . $hour;
 
         while (true) {
             try {
