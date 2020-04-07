@@ -6,3 +6,6 @@ putenv("OAUTH_TOKEN_URL=http://api/oauth2/token");
 putenv("OAUTH_CLIENT_SCOPE=admin");
 putenv("API_BASE_URL=http://localhost:8888");
 putenv("NOTIFY_HOUR=09:00");
+putenv("OAUTH_CLIENT_REDIRECT_URL='");
+putenv("OAUTH_CLIENT_AUTHORIZE_URL=http://api/oauth2/token");
+putenv("OAUTH_OWNER_DETAILS=http://api/oauth2/me");

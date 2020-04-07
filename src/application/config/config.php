@@ -10,6 +10,9 @@ return [
         'access_token_url'       => getenv('OAUTH_TOKEN_URL'),
         'scope'                  => [getenv('OAUTH_CLIENT_SCOPE')],
         'url'                    => getenv('API_BASE_URL'),
+        'redirect_uri'           => getenv('OAUTH_CLIENT_REDIRECT_URL'),
+        'authorize_url'          => getenv('OAUTH_CLIENT_AUTHORIZE_URL'),
+        'resource_owner_details' => getenv('OAUTH_OWNER_DETAILS'),
     ],
     'notify'       => [
         'hour'     => getenv('NOTIFY_HOUR'),

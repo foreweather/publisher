@@ -52,10 +52,13 @@ EXPOSE 22
 #######################################################################################################################
 # Default ENVS
 #######################################################################################################################
-ENV QUEUE_HOST              "beanstalkd"
-ENV OAUTH_CLIENT_ID         "notify"
-ENV OAUTH_CLIENT_SECRET     "teknasyon"
-ENV OAUTH_TOKEN_URL         "http://api/oauth2/token"
-ENV OAUTH_CLIENT_SCOPE      "admin"
-ENV API_BASE_URL            "http://api"
-ENV NOTIFY_HOUR             "09:00"
+ENV QUEUE_HOST                   "beanstalkd"
+ENV OAUTH_CLIENT_ID              "notify"
+ENV OAUTH_CLIENT_SECRET          "teknasyon"
+ENV OAUTH_TOKEN_URL              "http://api/oauth2/token"
+ENV OAUTH_CLIENT_SCOPE           "admin"
+ENV API_BASE_URL                 "http://api"
+ENV NOTIFY_HOUR                  "09:00"
+ENV OAUTH_CLIENT_REDIRECT_URL    ""
+ENV OAUTH_CLIENT_AUTHORIZE_URL   "http://api/oauth2/token"
+ENV OAUTH_OWNER_DETAILS          "http://api/oauth2/me"
