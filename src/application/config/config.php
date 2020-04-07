@@ -8,7 +8,7 @@ return [
         'client_id'              => getenv('OAUTH_CLIENT_ID'),    // The client ID assigned to you by the provider
         'client_secret'          => getenv('OAUTH_CLIENT_SECRET'),   // The client password assigned to you by the
         'access_token_url'       => getenv('OAUTH_TOKEN_URL'),
-        'scope'                  => [getenv('OAUTH_CLIENT_SCOPE')],
+        'scope'                  => [],
         'url'                    => getenv('API_BASE_URL'),
         'redirect_uri'           => getenv('OAUTH_CLIENT_REDIRECT_URL'),
         'authorize_url'          => getenv('OAUTH_CLIENT_AUTHORIZE_URL'),

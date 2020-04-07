@@ -160,7 +160,7 @@ class Publisher
         $hour    = $config['notify']['hour'];
         $api_url = $config['oauth_client']['url'];
 
-        $url = $api_url . '/user/subscribed_timezone ?clock=' . $hour;
+        $url = $api_url . '/user/subscribed_timezone?clock=' . $hour;
 
         while (true) {
             try {
