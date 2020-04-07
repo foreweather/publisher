@@ -15,10 +15,14 @@ komutları çalıştırmaktır:
 ### Docker
 
 ```bash
+
 docker rm -f beans
 docker run -d --name beans uretgec/beanstalkd-alpine:latest
 
+
 docker build --no-cache -t zekiunal/foreweather-publisher .
+docker push zekiunal/foreweather-publisher
+
 docker rm -f foreweather-publisher
 docker run -d --name foreweather-publisher \
     -v $PWD/src:/www \
@@ -26,4 +30,8 @@ docker run -d --name foreweather-publisher \
     -e API_BASE_URL="http://localhost:8888" \
     --link beans:beans \
     zekiunal/foreweather-publisher
+    
+ docker logs -f foreweather-publisher
+ 
 ```
+
