@@ -105,34 +105,7 @@ class Publisher
 
         echo $message . PHP_EOL;
     }
-
-    /**
-     * @param $job_request
-     *
-     * @return array
-     * @throws Exception
-     */
-    protected function segments($job_request): array
-    {
-        $segments = explode(':', $job_request);
-        if (count($segments) !== 2) {
-            throw new Exception('Invalid task handle');
-        }
-        return $segments;
-    }
-
-    /**
-     * @param array $segments
-     * @param array $data
-     *
-     * @return bool
-     * @throws Exception
-     */
-    protected function handle(array $segments, array $data): bool
-    {
-        return call_user_func_array([$this->di[$segments[0]], $segments[1]], [$data, $this->job]);
-    }
-
+    
     /**
      * @param string $message
      */
