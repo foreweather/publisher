@@ -19,6 +19,7 @@ komutları çalıştırmaktır:
 docker rm -f beans
 docker run -d --name beans uretgec/beanstalkd-alpine:latest
 
+
 docker build --no-cache -t zekiunal/foreweather-publisher .
 docker push zekiunal/foreweather-publisher
 
@@ -36,4 +37,3 @@ docker run -d --name foreweather-publisher \
  
  
 ```
- 

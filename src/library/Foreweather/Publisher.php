@@ -154,8 +154,6 @@ class Publisher
 
         $token = $client->getAccessToken('client_credentials');
 
-
-
         $hour    = $config['notify']['hour'];
         $api_url = $config['oauth_client']['url'];
 
