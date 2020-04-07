@@ -147,7 +147,6 @@ class Publisher
 
         $config = $this->di->get('config')->toArray();
 
-        $this->log(json_encode($config));
         /**
          * @var GenericProvider $client
          */
@@ -171,7 +170,12 @@ class Publisher
                 );
                 $response = $client->getParsedResponse($request);
 
-                if (isset($response['length']) && $response['length'] > 0) {
+                if (!isset($response['length'])) {
+                    $this->console(json_encode($response));
+                    throw new Exception('Subscriber selection timezone service not working: ' . $url);
+                }
+
+                if ($response['length'] > 0) {
                     $this->log('Send notification to timezone subscribers');
                     $this->queue->useTube('default')->put(
                         json_encode(
@@ -181,8 +185,6 @@ class Publisher
                             ]
                         )
                     );
-                } else {
-                    throw new Exception('Subscriber selection timezone service not working: ' . $url);
                 }
             } catch (Exception $e) {
                 $this->log($e->getMessage());
