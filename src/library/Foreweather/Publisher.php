@@ -177,10 +177,11 @@ class Publisher
                         )
                     );
                 } else {
-                    throw new \Exception('Subscriber selection timezone service not working...');
+                    throw new Exception('Subscriber selection timezone service not working...');
                 }
             } catch (Exception $e) {
                 $this->log($e->getMessage());
+                sleep(5);
                 continue;
             }
 
