@@ -1,0 +1,29 @@
+{
+  "name": "foreweather/publisher",
+  "type": "library",
+  "description": "Publisher service for subscribers\n",
+  "keywords": [
+    "phalcon",
+    "cli",
+    "foreweather"
+  ],
+  "homepage": "https://foreweather.test",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Zeki Unal",
+      "email": "zekiunal@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.2",
+    "ext-openssl": "*",
+    "ext-json": "*",
+    "ext-phalcon": "~4.0.5",
+    "pda/pheanstalk": "4.0.1",
+    "league/oauth2-client": "2.2.*"
+  },
+  "require-dev": {
+    "phalcon/ide-stubs": "4.0.4"
+  }
+}
